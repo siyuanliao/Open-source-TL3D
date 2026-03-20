@@ -1,4 +1,4 @@
-# Open-source-TL3D
+# Open-source TL3D
 This project contains two deep learning benchmark models for 3D transmission loss (TL) prediction, namely Res-CNN and U-Net, which serve as baselines for comparison with CMSM-Net proposed in the JASA manuscript. Their descriptions are as follows:
 
 (1) Res-CNN: A convolutional neural network with residual connections. This model first maps the acoustic source location and sound speed profile (SSP) to a conditional vector using a conditional encoder. After the background field is processed by initial convolution for feature extraction, the FiLM mechanism generates scale and shift parameters from the conditional vector to adaptively adjust the feature maps. The modulated features are fed through multiple residual blocks to extract deep representations, and are finally decoded into a 3D TL field via convolutional layers.
