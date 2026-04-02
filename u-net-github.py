@@ -40,7 +40,7 @@ class SoundFieldDataset(Dataset):
 
 
 # ==================== U-Net Baseline Model ====================
-class SimpleConditionEncoder(nn.Module):
+class ConditionEncoder(nn.Module):
     """Simple condition encoder"""
     def __init__(self, input_dim=52, cond_dim=256):
         super().__init__()
@@ -101,7 +101,7 @@ class SFUNet(nn.Module):
         super().__init__()
         
         # Condition encoder
-        self.cond_encoder = SimpleConditionEncoder(x1_dim, cond_dim)
+        self.cond_encoder = ConditionEncoder(x1_dim, cond_dim)
         
         # Initial convolutional layer
         self.init_conv = nn.Conv2d(in_ch, base_ch, kernel_size=3, padding=1)
