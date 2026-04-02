@@ -42,8 +42,8 @@ class SoundFieldDataset(Dataset):
 
 
 # ==================== Baseline CNN Model ====================
-class SimpleConvBlock(nn.Module):
-    """Simple convolutional block, without circular padding and FiLM"""
+class ConvBlock(nn.Module):
+    """ convolutional block, without circular padding and FiLM"""
     def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, padding=1):
         super().__init__()
         self.conv = nn.Conv2d(in_channels, out_channels, kernel_size=kernel_size, 
@@ -55,8 +55,8 @@ class SimpleConvBlock(nn.Module):
         return self.relu(self.norm(self.conv(x)))
 
 
-class SimpleResBlock(nn.Module):
-    """Simple residual block"""
+class ResBlock(nn.Module):
+    """ residual block"""
     def __init__(self, channels):
         super().__init__()
         self.conv1 = nn.Conv2d(channels, 2*channels, kernel_size=3, padding=1)
@@ -73,7 +73,7 @@ class SimpleResBlock(nn.Module):
         return self.relu(out)
 
 
-class SimpleConditionEncoder(nn.Module):
+class ConditionEncoder(nn.Module):
     """Simplified condition encoder"""
     def __init__(self, input_dim=52, hidden_dim=256, output_dim=256):
         super().__init__()
@@ -89,7 +89,7 @@ class SimpleConditionEncoder(nn.Module):
         return self.encoder(x)
 
 
-class SimpleConditionalCNN(nn.Module):
+class ConditionalCNN(nn.Module):
     """Baseline CNN model - concise version"""
     def __init__(self, x1_dim=52, in_ch=4, base_ch=64, cond_dim=128, num_blocks=8):
         """
@@ -324,7 +324,7 @@ def main():
     
     
     # Initialize model
-    model = SimpleConditionalCNN(
+    model = ConditionalCNN(
         x1_dim=52,
         in_ch=4,
         base_ch=128,  # Can adjust this parameter to control model size
