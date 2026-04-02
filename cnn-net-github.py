@@ -4,12 +4,10 @@ import time
 import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
 from dataclasses import dataclass
-import math
 from my_functions import calculate_model_complexity
-from smooth_func import smooth_angle_distance_fast
+from eof_k import generate_background
 
 
 # ==================== Data Utilities ====================
@@ -18,15 +16,10 @@ def split_indices_by_year(n_samples: int = 18876, years: int = 13, months: int =
     assert n_samples == years * months * points, f"Number of samples {n_samples} does not match {years}*{months}*{points}"
     
     year_ids = np.repeat(np.arange(1, years + 1), months * points)
-    train_idx = np.where(np.isin(year_ids, list(range(1, 8)) + [9] + list(range(11, 14))))[0]
-    val_idx = np.where(year_ids == 8)[0]
-    test_idx = np.where(year_ids == 10)[0]
+    train_idx = np.where(np.isin(year_ids, list(range(1, 13))))[0]
+    val_idx = np.where(year_ids == 13)[0]
+    test_idx = np.where(year_ids == 14)[0]
     return train_idx, val_idx, test_idx
-
-
-def gen_background(target):
-    """Generate background field: (36, 4, 250)"""
-    return target.reshape(13, 12, 121, 36, 4, 250).mean(axis=(0, 1, 2))
 
 
 # ==================== Dataset ====================
@@ -300,11 +293,10 @@ def main():
     # Load data
     input1 = np.load("shareddata2/sf_input2.npy", mmap_mode="r").astype(np.float32)
     target = np.load("shareddata2/sf_res2.npy", mmap_mode="r").astype(np.float32)
-    target = smooth_angle_distance_fast(target, sigma=0.6)
     assert len(input1) == len(target), "Data length mismatch"
     
     # Generate background field and normalize
-    input2 = gen_background(target)
+    input2 = generate_background(input1, target)
     x1_mean, x1_std = input1.mean(0), input1.std(0) + 1e-6
     t_mean, t_std = target.mean(), target.std() + 1e-6
     
